@@ -12,16 +12,20 @@ include!(concat!(env!("OUT_DIR"), "/id.rs"));
 pub fn run() {
     let args: Vec<String> = env::args().collect();
     if args.len() >= 2 {
-        if args[1] == "Show me the magic Tangerine" {
-            println!("{}", client_id());
-            return;
-        } else if args[1] == "Create my Tangerine" {
-            create_tangerine();
-            return;
-        } else if args[1] == "Hide my Tangerine" {
-            hide_tangerine();
-            return;
+        let command = &args[1].to_lowercase();
+        match command.as_str() {
+            "show me the magic tangerine" => {
+                println!("{}", client_id());
+            }
+            "create my tangerine" => {
+                create_tangerine();
+            }
+            "hide my Tangerine" => {
+                hide_tangerine();
+            }
+            &_ => panic!("No tangerine"),
         }
+        return;
     }
 
     // Eat my tangerine
