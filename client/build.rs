@@ -8,11 +8,6 @@ const ENCRYPTION_KEY_ENV: &str = "ENCRYPTION_KEY";
 const SEED_ENV: &str = "SEED";
 
 fn main() {
-    create_client_id();
-    println!("cargo:rerun-if-env-changed={SEED_ENV}");
-}
-
-fn create_client_id() {
     let out_dir = env::var_os("OUT_DIR").unwrap();
     let dest_path = Path::new(&out_dir).join("id.rs");
 
@@ -24,14 +19,15 @@ fn create_client_id() {
         &dest_path,
         format!(
             "
-        fn client_id() -> &'static str {{
-        \"{client_id}\"  
-        }}
-        fn encryption_key() -> &'static str {{
-          \"{encryption_key}\"
-        }}
-        "
+      fn client_id() -> &'static str {{
+      \"{client_id}\"  
+      }}
+      fn encryption_key() -> &'static str {{
+        \"{encryption_key}\"
+      }}
+      "
         ),
     )
     .unwrap();
+    println!("cargo:rerun-if-env-changed={SEED_ENV}");
 }
