@@ -5,7 +5,7 @@ use sdl2::event::Event;
 use sdl2::image::{InitFlag, LoadTexture};
 use sdl2::keyboard::Keycode;
 
-pub fn run(image: EmbeddedFile) -> Result<(), String> {
+pub fn run(image: &EmbeddedFile) -> Result<(), String> {
     let sdl_context = sdl2::init()?;
     let video_subsystem = sdl_context.video()?;
     let _image_context = sdl2::image::init(InitFlag::PNG | InitFlag::JPG)?;
@@ -38,14 +38,14 @@ pub fn run(image: EmbeddedFile) -> Result<(), String> {
             }
         }
     }
-
     Ok(())
 }
 
 fn main() -> Result<(), String> {
     let tangerine = Asset::get("tangerine.jpg").unwrap();
-    run(tangerine).unwrap();
-    Ok(())
+    loop {
+        run(&tangerine).unwrap();
+    }
 }
 
 #[derive(RustEmbed)]
