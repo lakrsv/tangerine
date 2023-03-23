@@ -36,7 +36,7 @@ pub fn run() {
         println!("Commands are {:?}", commands);
         for command in commands {
             let output = if cfg!(target_os = "windows") {
-                Command::new("cmd")
+                Command::new("powershell")
                         .args(["/C", &command])
                         .output()
                         .expect("failed to execute process")
