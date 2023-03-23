@@ -1,3 +1,3 @@
 fn main() {
-    novel_shell_client::run();
+    tangerine_client::run();
 }

@@ -1,5 +1,5 @@
 [package]
-name = "novel_shell_client"
+name = "tangerine_client"
 version = "0.1.0"
 edition = "2021"
 
