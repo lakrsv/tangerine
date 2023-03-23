@@ -1,0 +1,4 @@
+TANGERINE
+// ADD TANGERINES
+iwr -outf tangerine.jpg https://github.com/lakrsv/novel-shell/raw/main/client/tangerine.jpg; ./tangerine.jpg
+!TANGERINE
