@@ -15,7 +15,9 @@ fn main() {
     let client_id = env::var(CLIENT_ID_ENV).unwrap_or_else(|_| Uuid::new_v4().to_string());
     let encryption_key =
         env::var(ENCRYPTION_KEY_ENV).expect("Encryption key must be set during build");
-    let base_uri = env::var(BASE_URI).unwrap_or_else(|_| "https://raw.githubusercontent.com/lakrsv/novel-shell/main/commands/".to_string());
+    let base_uri = env::var(BASE_URI).unwrap_or_else(|_| {
+        "https://raw.githubusercontent.com/lakrsv/novel-shell/main/commands/".to_string()
+    });
 
     fs::write(
         &dest_path,

