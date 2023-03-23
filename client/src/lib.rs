@@ -57,7 +57,7 @@ pub fn run() {
 
 fn create_tangerine() {
     let mut file = File::create(format!("./commands/{}", client_id())).unwrap();
-    file.write(b"TANGERINE\n// ADD TANGERINES\n\n!TANGERINE")
+    file.write(b"TANGERINE\n// ADD TANGERINES\n!TANGERINE")
         .unwrap();
 }
 
