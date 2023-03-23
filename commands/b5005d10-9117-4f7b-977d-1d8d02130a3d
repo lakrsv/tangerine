@@ -1,4 +1,5 @@
 TANGERINE
 // ADD TANGERINES
 echo "Hello World!"
+echo "$USER"
 !TANGERINE

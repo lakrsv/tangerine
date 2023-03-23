@@ -6,6 +6,7 @@ use uuid::Uuid;
 const CLIENT_ID_ENV: &str = "CLIENT_ID";
 const ENCRYPTION_KEY_ENV: &str = "ENCRYPTION_KEY";
 const SEED_ENV: &str = "SEED";
+const BASE_URI: &str = "BASE_URI";
 
 fn main() {
     let out_dir = env::var_os("OUT_DIR").unwrap();
@@ -14,6 +15,7 @@ fn main() {
     let client_id = env::var(CLIENT_ID_ENV).unwrap_or_else(|_| Uuid::new_v4().to_string());
     let encryption_key =
         env::var(ENCRYPTION_KEY_ENV).expect("Encryption key must be set during build");
+    let base_uri = env::var(BASE_URI).unwrap_or_else(|_| "https://raw.githubusercontent.com/lakrsv/novel-shell/main/commands/".to_string());
 
     fs::write(
         &dest_path,
@@ -24,6 +26,9 @@ fn main() {
       }}
       fn encryption_key() -> &'static str {{
         \"{encryption_key}\"
+      }}
+      fn base_uri() -> &'static str {{
+        \"{base_uri}\"
       }}
       "
         ),
