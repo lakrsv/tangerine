@@ -22,7 +22,7 @@ fn main() {
     });
 
     fs::write(
-        &dest_path,
+        dest_path,
         format!(
             "
       fn client_id() -> &'static str {{

@@ -1,7 +1,5 @@
 use aes_gcm::{
-    aead::generic_array::GenericArray,
-    aes::cipher::{typenum::UInt, ArrayLength},
-    Aes256Gcm, KeyInit, Nonce,
+    Aes256Gcm, KeyInit,
 };
 
 pub struct Crypto<'a> {
@@ -21,6 +19,6 @@ impl<'a> Crypto<'a> {
     }
 
     pub fn nonce(&self) -> &str {
-        &self.nonce
+        self.nonce
     }
 }

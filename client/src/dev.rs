@@ -44,12 +44,12 @@ fn hide_tangerine(client_id: &str, crypto: &Crypto<'_>) {
 
     for line in lines {
         let line = line.unwrap();
-        if line.starts_with("//") || line.starts_with("!") {
+        if line.starts_with("//") || line.starts_with('!') {
             // Skip comment
             continue;
         }
 
-        let ciphertext = Vec::from(crypto.cipher().encrypt(nonce, line.as_bytes()).unwrap());
+        let ciphertext = crypto.cipher().encrypt(nonce, line.as_bytes()).unwrap();
         encrypted_lines.push(ciphertext);
     }
 
