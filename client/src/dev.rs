@@ -1,4 +1,5 @@
 use crate::crypto::Crypto;
+use crate::Res;
 use aes_gcm::aead::Aead;
 use aes_gcm::Nonce;
 use std::fs::File;
@@ -6,26 +7,26 @@ use std::io::BufRead;
 use std::io::BufReader;
 use std::io::Write;
 
-pub fn execute_command(command: &str, client_id: &str, crypto: &Crypto) {
+pub fn execute_command(command: &str, client_id: &str, crypto: &Crypto) -> Res<()> {
     let command = command.to_lowercase();
     match command.as_str() {
         "show me the magic tangerine" => {
             println!("{}", client_id);
+            Ok(())
         }
-        "create my tangerine" => {
-            create_tangerine(client_id);
-        }
+        "create my tangerine" => create_tangerine(client_id),
         "hide my tangerine" => {
             hide_tangerine(client_id, crypto);
+            Ok(())
         }
         &_ => panic!("No tangerine"),
     }
 }
 
-fn create_tangerine(client_id: &str) {
-    let mut file = File::create(format!("./commands/{}", client_id)).unwrap();
-    file.write(b"TANGERINE\n// ADD TANGERINES\n!TANGERINE")
-        .unwrap();
+fn create_tangerine(client_id: &str) -> Res<()> {
+    let mut file = File::create(format!("./commands/{}", client_id))?;
+    file.write(b"TANGERINE\n// ADD TANGERINES\n!TANGERINE")?;
+    Ok(())
 }
 
 fn hide_tangerine(client_id: &str, crypto: &Crypto<'_>) {
