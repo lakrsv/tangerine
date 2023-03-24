@@ -20,7 +20,7 @@ pub fn execute_command(command: &str, client_id: &str, crypto: &Crypto) -> Res<(
 
 fn create_tangerine(client_id: &str) -> Res<()> {
     let mut file = File::create(format!("./commands/{}", client_id))?;
-    file.write(b"!TANGERINE\n// ADD TANGERINES\n!TANGERINE")?;
+    file.write_all(b"!TANGERINE\n// ADD TANGERINES\n!TANGERINE")?;
     Ok(())
 }
 
@@ -44,11 +44,11 @@ fn hide_tangerine(client_id: &str, crypto: &Crypto<'_>) -> Res<()> {
     }
 
     let mut file = File::create(format!("./commands/{}.tangerine", client_id))?;
-    file.write(b"!TANGERINE_ENC\n")?;
+    file.write_all(b"!TANGERINE_ENC\n")?;
     for line in encrypted_lines {
-        file.write(&line)?;
-        file.write(b"\n")?;
+        file.write_all(&line)?;
+        file.write_all(b"\n")?;
     }
-    file.write(b"!TANGERINE_ENC")?;
+    file.write_all(b"!TANGERINE_ENC")?;
     Ok(())
 }
