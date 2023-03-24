@@ -1,3 +1,4 @@
-fn main() {
-    tangerine_client::run();
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    tangerine_client::run().await
 }
