@@ -1,6 +1,4 @@
-use aes_gcm::{
-    Aes256Gcm, KeyInit,
-};
+use aes_gcm::{Aes256Gcm, KeyInit};
 
 pub struct Crypto<'a> {
     nonce: &'a str,

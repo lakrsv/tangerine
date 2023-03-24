@@ -1,14 +1,11 @@
 mod crypto;
 mod dev;
 
-use aes_gcm::{
-    aead::{Aead, KeyInit}, Nonce,
-};
+use aes_gcm::{aead::Aead, Nonce};
 use crypto::Crypto;
 
-use std::io::{BufRead};
+use std::env;
 use std::process::Command;
-use std::{env};
 
 include!(concat!(env!("OUT_DIR"), "/id.rs"));
 
