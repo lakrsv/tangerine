@@ -39,10 +39,7 @@ fn hide_tangerine(client_id: &str, crypto: &Crypto<'_>) -> Res<()> {
             continue;
         }
 
-        let ciphertext = crypto
-            .cipher()
-            .encrypt(nonce, line.as_bytes())
-            .or_else(|e| Err(e))?;
+        let ciphertext = crypto.cipher().encrypt(nonce, line.as_bytes())?;
         encrypted_lines.push(ciphertext);
     }
 

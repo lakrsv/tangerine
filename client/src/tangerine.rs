@@ -28,7 +28,7 @@ impl Tangerine {
         Ok(())
     }
 
-    pub async fn from_http(
+    pub async fn read_http(
         &mut self,
         base_uri: &str,
         client_id: &str,

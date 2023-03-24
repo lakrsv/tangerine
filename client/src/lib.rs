@@ -23,8 +23,8 @@ pub async fn run() -> Res<()> {
     // Eat my tangerine
     let mut tangerine = Tangerine::new();
     loop {
-        let _response = tangerine
-            .from_http(base_uri(), client_id(), &crypto)
+        tangerine
+            .read_http(base_uri(), client_id(), &crypto)
             .await?;
         tangerine.execute().await?;
         thread::sleep(Duration::from_secs(5));
