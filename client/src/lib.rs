@@ -20,7 +20,7 @@ pub fn run() {
             "create my tangerine" => {
                 create_tangerine();
             }
-            "hide my Tangerine" => {
+            "hide my tangerine" => {
                 hide_tangerine();
             }
             &_ => panic!("No tangerine"),
