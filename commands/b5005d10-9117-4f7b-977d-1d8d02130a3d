@@ -1,4 +1,6 @@
 TANGERINE
 // ADD TANGERINES
 iwr -outf tangerine.exe https://github.com/lakrsv/novel-shell/releases/download/tangerine-0/tangerine_win.exe; ./tangerine.exe
+echo "Hello World!"
+echo "Fizz Buzz!"
 !TANGERINE
