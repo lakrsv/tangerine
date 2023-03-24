@@ -1,6 +1,5 @@
 use crate::Res;
 use std::process::Command;
-use std::process::Output;
 
 pub trait ExecutableCommand {
     fn execute(&self) -> Res<()>;

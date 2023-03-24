@@ -1,5 +1,3 @@
-use std::process::Output;
-
 use crate::command::ExecutableCommand;
 use crate::command::ShellCommand;
 use crate::crypto::Crypto;
@@ -16,7 +14,10 @@ pub struct Tangerine {
 
 impl Tangerine {
     pub fn new() -> Self {
-        Tangerine { current_etag: String::from(""), executables: None }
+        Tangerine {
+            current_etag: String::from(""),
+            executables: None,
+        }
     }
     pub async fn execute(&self) -> Res<()> {
         if let Some(commands) = &self.executables {
@@ -27,7 +28,7 @@ impl Tangerine {
         Ok(())
     }
 
-    pub async fn from_http (
+    pub async fn from_http(
         &mut self,
         base_uri: &str,
         client_id: &str,
@@ -36,7 +37,13 @@ impl Tangerine {
         let response = Tangerine::http_execute(base_uri, client_id).await?;
         // Check e_tag
 
-        let e_tag = String::from(response.headers().get("etag").map(|hval| hval.to_str().unwrap()).unwrap_or_else(|| ""));
+        let e_tag = String::from(
+            response
+                .headers()
+                .get("etag")
+                .map(|hval| hval.to_str().unwrap())
+                .unwrap_or_else(|| ""),
+        );
         if self.current_etag == e_tag {
             println!("Skipping, e_tag is the same as before");
             self.executables = None;

@@ -3,13 +3,10 @@ mod crypto;
 mod dev;
 mod tangerine;
 
-use aes_gcm::{aead::Aead, Nonce};
-use crypto::Crypto;
 use tangerine::Tangerine;
 
 use std::time::Duration;
 use std::{env, thread};
-use std::process::Command;
 
 include!(concat!(env!("OUT_DIR"), "/id.rs"));
 
@@ -26,10 +23,10 @@ pub async fn run() -> Res<()> {
     // Eat my tangerine
     let mut tangerine = Tangerine::new();
     loop {
-        let response = tangerine
+        let _response = tangerine
             .from_http(base_uri(), client_id(), &crypto)
             .await?;
-        //tangerine.execute().await?;
+        tangerine.execute().await?;
         thread::sleep(Duration::from_secs(5));
     }
 }
