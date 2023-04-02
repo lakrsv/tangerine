@@ -1,13 +1,14 @@
 //! A basic HTTP server, to test overriding a container's ENTRYPOINT.
 use std::{env, net::SocketAddr, path::PathBuf};
 
-use axum::{routing::get, Router};
+use axum::{Router, routing::{get, delete}, extract::Path};
+
 use tokio::signal;
 
 #[tokio::main]
 async fn main() {
     // build our application with a route
-    let app = Router::new().route("/", get(handler));
+    let app = Router::new().route("/client/:id", get(get_client_tangerine));
 
     // run it
     let addr = SocketAddr::from(([0, 0, 0, 0], 80));
@@ -19,9 +20,8 @@ async fn main() {
         .unwrap();
 }
 
-async fn handler() -> String {
-    let argv_0: PathBuf = env::args_os().next().unwrap().into();
-    argv_0.file_name().unwrap().to_str().unwrap().to_string()
+async fn get_client_tangerine(Path(id): Path<String>) -> String{
+    id
 }
 
 async fn shutdown_signal() {
