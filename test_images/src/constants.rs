@@ -1,0 +1,3 @@
+pub const CLIENT_ID: &str = "b5005d10-9117-4f7b-977d-1d8d02130a3d";
+pub const ENCRYPTION_KEY: &str = "11111111111111111111111111111111";
+pub const NONCE: &str = "TANGERINE!!!";

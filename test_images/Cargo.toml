@@ -10,6 +10,8 @@ publish = false
 anyhow = "1.0.56"
 axum = { version = "0.5.1", features = [ "http2" ] }
 tokio = { version = "1.17.0", features = [ "full" ] }
+aes-gcm = { version = "0.10.1", features = ["std"] }
+tangerine_client = { path = "../client" }
 
 [build-dependencies]
 anyhow = "1.0.56"

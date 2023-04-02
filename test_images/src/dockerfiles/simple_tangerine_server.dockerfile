@@ -23,6 +23,6 @@ RUN apt-get update -y \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
-COPY --from=builder /app/target/release/simple_tangerine_server client
+COPY --from=builder /app/target/release/simple_tangerine_server server
 EXPOSE 80
-ENTRYPOINT ["./client"]
+ENTRYPOINT ["./server"]

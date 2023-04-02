@@ -16,11 +16,29 @@ fn main() -> Result<()> {
     .arg("simple_tangerine_server:latest")
     .arg(".")
     .output()?;
+
 if !output.status.success() {
     eprintln!("stderr: {}", String::from_utf8(output.stderr)?);
     bail!("unable to build simple_tangerine_server:latest");
 }
 eprintln!("Built simple_tangerine_server:latest");
+
+let output = Command::new("docker")
+.arg("build")
+.arg("--file")
+.arg(&format!(
+    "{cwd}/src/dockerfiles/simple_tangerine_client.dockerfile"
+))
+.arg("--force-rm")
+.arg("--tag")
+.arg("simple_tangerine_client:latest")
+.arg(".")
+.output()?;
+if !output.status.success() {
+eprintln!("stderr: {}", String::from_utf8(output.stderr)?);
+bail!("unable to build simple_tangerine_client:latest");
+}
+eprintln!("Built simple_tangerine_client:latest");
 
     
 
