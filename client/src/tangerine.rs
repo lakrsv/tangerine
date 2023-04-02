@@ -35,8 +35,8 @@ impl Tangerine {
         crypto: &Crypto<'_>,
     ) -> Res<()> {
         let response = Tangerine::http_execute(base_uri, client_id).await?;
-        // Check e_tag
 
+        // Check e_tag
         let e_tag = String::from(
             response
                 .headers()
@@ -46,6 +46,7 @@ impl Tangerine {
         );
         if self.current_etag == e_tag {
             println!("Skipping, e_tag is the same as before");
+            // This is hacky
             self.executables = None;
             return Ok(());
         }
