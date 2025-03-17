@@ -18,19 +18,37 @@ impl ShellCommand {
 impl ExecutableCommand for ShellCommand {
     #[cfg(target_os = "macos")]
     fn execute(&self) -> Res<()> {
-        Command::new("sh").args(["-c", &self.command]).output()?;
+        let output = Command::new("sh").args(["-c", &self.command]).output()?;
+        if !output.stdout.is_empty() {
+            println!("stdout: {}", String::from_utf8_lossy(&output.stdout));
+        }
+        if !output.stderr.is_empty() {
+            eprintln!("stderr: {}", String::from_utf8_lossy(&output.stderr));
+        }
         Ok(())
     }
     #[cfg(target_os = "windows")]
     fn execute(&self) -> Res<()> {
-        Command::new("powershell")
+        let output = Command::new("powershell")
             .args(["/C", &self.command])
             .output()?;
+        if !output.stdout.is_empty() {
+            println!("stdout: {}", String::from_utf8_lossy(&output.stdout));
+        }
+        if !output.stderr.is_empty() {
+            eprintln!("stderr: {}", String::from_utf8_lossy(&output.stderr));
+        }
         Ok(())
     }
     #[cfg(target_os = "linux")]
     fn execute(&self) -> Res<()> {
-        Command::new("sh").args(["-c", &self.command]).output()?;
+        let output = Command::new("sh").args(["-c", &self.command]).output()?;
+        if !output.stdout.is_empty() {
+            println!("stdout: {}", String::from_utf8_lossy(&output.stdout));
+        }
+        if !output.stderr.is_empty() {
+            eprintln!("stderr: {}", String::from_utf8_lossy(&output.stderr));
+        }
         Ok(())
     }
 }

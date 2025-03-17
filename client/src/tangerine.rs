@@ -45,11 +45,11 @@ impl Tangerine {
                 .unwrap_or_else(|| ""),
         );
         if self.current_etag == e_tag {
-            println!("Skipping, e_tag is the same as before");
+            println!("Skipping, e_tag is the same as before: {}", e_tag);
             self.executables = None;
             return Ok(());
         }
-        println!("Not skipping, new e_tag");
+        println!("Not skipping, new e_tag: {}", e_tag);
         self.current_etag = e_tag;
 
         let commands: Vec<Box<dyn ExecutableCommand>> =
