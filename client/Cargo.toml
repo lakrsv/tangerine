@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 aes-gcm = { version = "0.10.1", features = ["std"] }
 reqwest = { version = "0.11.15" }
-tokio = { version = "1.26.0", features = ["full"] }
+tokio = { version = "1.26.0", features = ["full", "macros"] }
 bytes = { version = "1" }
 
 [build-dependencies]
