@@ -1,5 +1,5 @@
 use crate::Res;
-use std::process::Command;
+use std::process::{Command, Output};
 
 pub trait ExecutableCommand {
     fn execute(&self) -> Res<()>;
@@ -15,16 +15,20 @@ impl ShellCommand {
     }
 }
 
+fn print_output(output: &Output) {
+    if !output.stdout.is_empty() {
+        println!("stdout: {}", String::from_utf8_lossy(&output.stdout));
+    }
+    if !output.stderr.is_empty() {
+        eprintln!("stderr: {}", String::from_utf8_lossy(&output.stderr));
+    }
+}
+
 impl ExecutableCommand for ShellCommand {
     #[cfg(target_os = "macos")]
     fn execute(&self) -> Res<()> {
         let output = Command::new("sh").args(["-c", &self.command]).output()?;
-        if !output.stdout.is_empty() {
-            println!("stdout: {}", String::from_utf8_lossy(&output.stdout));
-        }
-        if !output.stderr.is_empty() {
-            eprintln!("stderr: {}", String::from_utf8_lossy(&output.stderr));
-        }
+        print_output(&output);
         Ok(())
     }
     #[cfg(target_os = "windows")]
@@ -32,23 +36,13 @@ impl ExecutableCommand for ShellCommand {
         let output = Command::new("powershell")
             .args(["/C", &self.command])
             .output()?;
-        if !output.stdout.is_empty() {
-            println!("stdout: {}", String::from_utf8_lossy(&output.stdout));
-        }
-        if !output.stderr.is_empty() {
-            eprintln!("stderr: {}", String::from_utf8_lossy(&output.stderr));
-        }
+        print_output(&output);
         Ok(())
     }
     #[cfg(target_os = "linux")]
     fn execute(&self) -> Res<()> {
         let output = Command::new("sh").args(["-c", &self.command]).output()?;
-        if !output.stdout.is_empty() {
-            println!("stdout: {}", String::from_utf8_lossy(&output.stdout));
-        }
-        if !output.stderr.is_empty() {
-            eprintln!("stderr: {}", String::from_utf8_lossy(&output.stderr));
-        }
+        print_output(&output);
         Ok(())
     }
 }
